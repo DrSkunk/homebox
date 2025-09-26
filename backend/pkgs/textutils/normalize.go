@@ -3,9 +3,6 @@ package textutils
 import (
 	"strings"
 	"unicode"
-
-	"golang.org/x/text/runes"
-	"golang.org/x/text/transform"
 	"golang.org/x/text/unicode/norm"
 )
 
@@ -17,19 +14,25 @@ import (
 // - "café" becomes "cafe"
 // - "père" becomes "pere"
 func RemoveAccents(text string) string {
-	// Create a transformer that:
-	// 1. Normalizes to NFD (canonical decomposition)
-	// 2. Removes diacritical marks (combining characters)
-	// 3. Normalizes back to NFC (canonical composition)
-	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
-	
-	result, _, err := transform.String(t, text)
-	if err != nil {
-		// If transformation fails, return the original text
-		return text
-	}
-	
-	return result
+       // Alleen diacritics van Latijnse tekens verwijderen, niet van Cyrillisch
+       var b strings.Builder
+       runes := []rune(norm.NFD.String(text))
+       for i := 0; i < len(runes); i++ {
+	       r := runes[i]
+	       if unicode.In(r, unicode.Mn) {
+		       // Check basisletter (vorige rune)
+		       if i > 0 {
+			       base := runes[i-1]
+			       if unicode.In(base, unicode.Latin) {
+				       // diacritic op Latijns: verwijderen
+				       continue
+			       }
+		       }
+		       // diacritic op niet-Latijns: behouden
+	       }
+	       b.WriteRune(r)
+       }
+       return norm.NFC.String(b.String())
 }
 
 // NormalizeSearchQuery normalizes a search query for accent-insensitive matching.

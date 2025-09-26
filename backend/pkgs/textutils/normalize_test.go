@@ -101,6 +101,21 @@ func TestRemoveAccents(t *testing.T) {
 			input:    "Français café España niño",
 			expected: "Francais cafe Espana nino",
 		},
+		{
+			name:     "Ukrainian uppercase",
+			input:    "ТЕСТОВИЙ ЗАПИС",
+			expected: "ТЕСТОВИЙ ЗАПИС",
+		},
+		{
+			name:     "Ukrainian lowercase",
+			input:    "тестовий запис",
+			expected: "тестовий запис",
+		},
+		{
+			name:     "Ukrainian mixed case",
+			input:    "Тестовий запис",
+			expected: "Тестовий запис",
+		},
 	}
 
 	for _, tc := range testCases {
@@ -138,6 +153,21 @@ func TestNormalizeSearchQuery(t *testing.T) {
 			name:     "No accents mixed case",
 			input:    "Hello World",
 			expected: "hello world",
+		},
+		{
+			name:     "Ukrainian uppercase",
+			input:    "ТЕСТОВИЙ ЗАПИС",
+			expected: "тестовий запис",
+		},
+		{
+			name:     "Ukrainian lowercase",
+			input:    "тестовий запис",
+			expected: "тестовий запис",
+		},
+		{
+			name:     "Ukrainian mixed case",
+			input:    "Тестовий запис",
+			expected: "тестовий запис",
 		},
 	}
 
